@@ -93,7 +93,7 @@ jobs:
         with:
           manifest-path: kiro.desktop.unofficial.generated.yml
           bundle: kiro.desktop.unofficial.flatpak
-          repository-name: repo
+          repo-dir: repo
           cache-key: flatpak-builder-${{ needs.check.outputs.version }}
 
       - name: Upload bundle artifact
