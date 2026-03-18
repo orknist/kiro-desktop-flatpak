@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Kiro
+GenericName=IDE
+Comment=Agentic AI IDE — prototype to production (Unofficial Flatpak)
+Exec=kiro %U
+Icon=kiro.desktop.unofficial
+Type=Application
+StartupNotify=true
+StartupWMClass=kiro
+Categories=Development;IDE;TextEditor;
+MimeType=text/plain;inode/directory;
+Keywords=kiro;ide;code;editor;ai;aws;
+Actions=new-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=kiro --new-window %F

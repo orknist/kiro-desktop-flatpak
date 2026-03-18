@@ -1,0 +1,78 @@
+app-id: kiro.desktop.unofficial
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '24.08'
+command: kiro
+separate-locales: false
+
+finish-args:
+  # Display & graphics
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  # Network access (extensions, language servers, AI features)
+  - --share=network
+  # Audio (required by some VS Code extensions)
+  - --socket=pulseaudio
+  # Full host filesystem access — expected for an IDE
+  - --filesystem=host
+  # ptrace support for debugging
+  - --allow=devel
+  # Desktop notifications
+  - --talk-name=org.freedesktop.Notifications
+  # Credential manager integration (keyring / kwallet)
+  - --talk-name=org.freedesktop.secrets
+  - --talk-name=org.kde.kwalletd5
+  - --talk-name=org.kde.kwalletd6
+  # GPG signing
+  - --filesystem=xdg-run/gnupg:ro
+  # SSH keys (read-only)
+  - --filesystem=~/.ssh:ro
+  # Disable the built-in updater; updates are managed via this Flatpak package
+  - --env=ELECTRON_NO_UPDATER=1
+
+modules:
+  - name: kiro
+    buildsystem: simple
+    build-commands:
+      # Install application files
+      - cp -r kiro-app /app/kiro
+
+      # Symlink the real binary into /app/bin so Flatpak can find the command
+      - mkdir -p /app/bin
+      - ln -sf /app/kiro/kiro /app/bin/kiro
+
+      # Desktop entry
+      - install -Dm644 kiro.desktop.unofficial.desktop
+          /app/share/applications/kiro.desktop.unofficial.desktop
+
+      # AppStream metadata
+      - install -Dm644 kiro.desktop.unofficial.metainfo.xml
+          /app/share/metainfo/kiro.desktop.unofficial.metainfo.xml
+
+      # Icon
+      - install -Dm644 kiro.desktop.unofficial.png
+          /app/share/icons/hicolor/512x512/apps/kiro.desktop.unofficial.png
+
+    sources:
+      # -------------------------------------------------------------------
+      # Kiro tar.gz — URL and sha256 are injected by build.sh at build time
+      # -------------------------------------------------------------------
+      - type: archive
+        url: KIRO_URL_PLACEHOLDER
+        sha256: KIRO_SHA256_PLACEHOLDER
+        dest: kiro-app
+        strip-components: 1
+
+      - type: file
+        path: kiro.desktop.unofficial.png
+
+      # Desktop entry and AppStream metadata
+      - type: file
+        path: kiro.desktop.unofficial.desktop
+
+      - type: file
+        path: kiro.desktop.unofficial.metainfo.xml

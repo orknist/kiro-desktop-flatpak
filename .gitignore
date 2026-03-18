@@ -1,0 +1,11 @@
+# Flatpak build artifacts
+.flatpak-build/
+.flatpak-repo/
+.flatpak-builder-state/
+*.flatpak
+
+# Downloaded archive cache
+.cache/
+
+# Filled temporary manifest
+*.generated.yml

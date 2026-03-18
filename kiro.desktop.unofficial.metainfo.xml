@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>kiro.desktop.unofficial</id>
+
+  <name>Kiro</name>
+  <summary>Agentic AI IDE — prototype to production</summary>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-proprietary</project_license>
+
+  <developer id="dev.kiro">
+    <name>Amazon Web Services</name>
+  </developer>
+
+  <description>
+    <p>
+      <em>This is an unofficial, community-maintained Flatpak package.
+      Kiro is a proprietary application developed by Amazon Web Services.</em>
+    </p>
+    <p>
+      Kiro is an agentic AI IDE built on Code OSS (VS Code) that helps you go
+      from prototype to production with spec-driven development, agent hooks,
+      powers, and natural language coding assistance.
+    </p>
+    <ul>
+      <li>Specs — Turn prompts into structured implementation plans</li>
+      <li>Hooks — Automate tasks triggered by file changes and events</li>
+      <li>Agentic Chat — Build features through natural conversation</li>
+      <li>MCP Servers — Connect external tools via Model Context Protocol</li>
+      <li>VS Code compatible — Import extensions, themes, and settings</li>
+    </ul>
+  </description>
+
+  <url type="homepage">https://kiro.dev</url>
+  <url type="bugtracker">https://github.com/kirodotdev/Kiro/issues</url>
+  <url type="vcs-browser">https://github.com/kirodotdev/Kiro</url>
+
+  <launchable type="desktop-id">kiro.desktop.unofficial.desktop</launchable>
+
+  <categories>
+    <category>Development</category>
+    <category>IDE</category>
+  </categories>
+
+  <keywords>
+    <keyword>kiro</keyword>
+    <keyword>ide</keyword>
+    <keyword>code editor</keyword>
+    <keyword>ai</keyword>
+    <keyword>aws</keyword>
+    <keyword>vscode</keyword>
+  </keywords>
+
+  <provides>
+    <binary>kiro</binary>
+  </provides>
+
+  <releases>
+    <!-- build.sh updates this block on every build -->
+    <release version="KIRO_VERSION_PLACEHOLDER" date="KIRO_DATE_PLACEHOLDER">
+      <description>
+        <p>Latest stable release of Kiro IDE.</p>
+      </description>
+    </release>
+  </releases>
+
+  <content_rating type="oars-1.1"/>
+</component>
