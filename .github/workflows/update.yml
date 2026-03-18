@@ -114,7 +114,7 @@ jobs:
           <pre>
           # Add repo
           flatpak remote-add --if-not-exists --user kiro-unofficial \
-            https://orknist.github.io/kiro-desktop-flatpak/repo
+            https://orknist.github.io/kiro-desktop-flatpak
 
           # Install
           flatpak install --user kiro-unofficial kiro.desktop.unofficial
@@ -171,7 +171,7 @@ jobs:
             **Install via Flatpak repo (recommended):**
             ```bash
             flatpak remote-add --if-not-exists --user kiro-unofficial \
-              https://orknist.github.io/kiro-desktop-flatpak/repo
+              https://orknist.github.io/kiro-desktop-flatpak
             flatpak install --user kiro-unofficial kiro.desktop.unofficial
             ```
 
