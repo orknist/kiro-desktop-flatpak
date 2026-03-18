@@ -1,0 +1,183 @@
+name: Build & Publish Flatpak
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: flatpak-deploy
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Check for new version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      url: ${{ steps.meta.outputs.url }}
+      should_build: ${{ steps.compare.outputs.should_build }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch Kiro metadata
+        id: meta
+        run: |
+          METADATA_URL="https://prod.download.desktop.kiro.dev/stable/metadata-linux-x64-stable.json"
+          METADATA=$(curl -fsSL "$METADATA_URL")
+
+          VERSION=$(echo "$METADATA" | jq -r '.currentRelease')
+          URL=$(echo "$METADATA" | jq -r '.releases[].updateTo.url' | grep '\.tar\.gz' | head -1)
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Kiro version: $VERSION"
+
+      - name: Compare with last built version
+        id: compare
+        run: |
+          LATEST_TAG=$(git tag --sort=-v:refname | head -1 || echo "")
+          NEW_VERSION="${{ steps.meta.outputs.version }}"
+
+          if [ "$LATEST_TAG" = "v$NEW_VERSION" ]; then
+            echo "should_build=false" >> "$GITHUB_OUTPUT"
+            echo "Version $NEW_VERSION already built, skipping."
+          else
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+            echo "New version detected: $NEW_VERSION (last: $LATEST_TAG)"
+          fi
+
+  build:
+    name: Build Flatpak
+    needs: check
+    if: needs.check.outputs.should_build == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
+      options: --privileged
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download and compute SHA256
+        id: download
+        run: |
+          URL="${{ needs.check.outputs.url }}"
+          VERSION="${{ needs.check.outputs.version }}"
+          TARBALL="/tmp/kiro-${VERSION}.tar.gz"
+
+          curl -L --progress-bar -o "$TARBALL" "$URL"
+          SHA256=$(sha256sum "$TARBALL" | awk '{print $1}')
+
+          echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
+          echo "SHA256: $SHA256"
+
+      - name: Generate manifest
+        run: |
+          sed \
+            -e "s|KIRO_URL_PLACEHOLDER|${{ needs.check.outputs.url }}|g" \
+            -e "s|KIRO_SHA256_PLACEHOLDER|${{ steps.download.outputs.sha256 }}|g" \
+            -e "s|KIRO_VERSION_PLACEHOLDER|${{ needs.check.outputs.version }}|g" \
+            -e "s|KIRO_DATE_PLACEHOLDER|$(date +%Y-%m-%d)|g" \
+            kiro.desktop.unofficial.yml > kiro.desktop.unofficial.generated.yml
+
+          cat kiro.desktop.unofficial.generated.yml
+
+      - name: Build Flatpak
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          manifest-path: kiro.desktop.unofficial.generated.yml
+          bundle: kiro.desktop.unofficial.flatpak
+          repository-name: repo
+          cache-key: flatpak-builder-${{ needs.check.outputs.version }}
+
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kiro-flatpak-${{ needs.check.outputs.version }}
+          path: kiro.desktop.unofficial.flatpak
+          retention-days: 90
+
+      - name: Prepare Pages content
+        run: |
+          cat > repo/index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head><meta charset="utf-8"><title>Kiro Flatpak Repo</title></head>
+          <body>
+          <h1>Kiro IDE — Unofficial Flatpak Repository</h1>
+          <pre>
+          # Add repo
+          flatpak remote-add --if-not-exists --user kiro-unofficial \
+            https://orknist.github.io/kiro-desktop-flatpak/repo
+
+          # Install
+          flatpak install --user kiro-unofficial kiro.desktop.unofficial
+
+          # Update
+          flatpak update --user kiro.desktop.unofficial
+          </pre>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: repo
+
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    needs: [check, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  release:
+    name: Create GitHub Release
+    needs: [check, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: kiro-flatpak-${{ needs.check.outputs.version }}
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.check.outputs.version }}
+          name: Kiro ${{ needs.check.outputs.version }}
+          body: |
+            Automated Flatpak build for Kiro IDE v${{ needs.check.outputs.version }}
+
+            **Install via Flatpak repo (recommended):**
+            ```bash
+            flatpak remote-add --if-not-exists --user kiro-unofficial \
+              https://orknist.github.io/kiro-desktop-flatpak/repo
+            flatpak install --user kiro-unofficial kiro.desktop.unofficial
+            ```
+
+            **Or install the bundle directly:**
+            ```bash
+            flatpak install --user kiro.desktop.unofficial.flatpak
+            ```
+          files: kiro.desktop.unofficial.flatpak
+          generate_release_notes: false

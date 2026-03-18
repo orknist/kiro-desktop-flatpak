@@ -18,10 +18,12 @@ marking it as the unofficial Flatpak distribution.
 
 ## Why Flatpak?
 
-- Designed for **immutable distro** users (Fedora Silverblue, openSUSE MicroOS,
-  SteamOS, etc.) where installing `.tar.gz` or `.deb` packages directly is
-  inconvenient or unsupported.
-- No system-level dependency pollution.
+- Works on any Linux distribution with Flatpak installed (Fedora, Ubuntu,
+  Debian, Arch, openSUSE, etc.)
+- Especially useful on **immutable distros** (Fedora Silverblue, openSUSE
+  MicroOS, SteamOS, etc.) where installing `.tar.gz` or `.deb` packages
+  directly is inconvenient or unsupported.
+- No system-level dependency pollution — runs in its own sandbox.
 - The built-in updater is disabled; version management is handled through this
   Flatpak package instead.
 
@@ -29,18 +31,14 @@ marking it as the unofficial Flatpak distribution.
 
 ## Installation
 
-### Via local repo (recommended)
+### Via Flatpak repo (recommended)
 
 ```bash
-# 1. Add Flathub remote if you haven't already
-flatpak remote-add --if-not-exists --user flathub \
-  https://dl.flathub.org/repo/flathub.flatpakrepo
-
-# 2. Add this package's remote
-flatpak remote-add --user --no-gpg-verify kiro-unofficial \
+# 1. Add this package's remote
+flatpak remote-add --if-not-exists --user kiro-unofficial \
   https://orknist.github.io/kiro-desktop-flatpak/repo
 
-# 3. Install
+# 2. Install
 flatpak install --user kiro-unofficial kiro.desktop.unofficial
 ```
 
@@ -48,13 +46,22 @@ flatpak install --user kiro-unofficial kiro.desktop.unofficial
 
 ```bash
 # Download the .flatpak file from the Releases page, then:
-flatpak install --user kiro.desktop.unofficial-*.flatpak
+flatpak install --user kiro.desktop.unofficial.flatpak
 ```
 
 ### Running
 
 ```bash
 flatpak run kiro.desktop.unofficial
+```
+
+### Updating
+
+The repo is automatically updated every 6 hours via GitHub Actions.
+To get the latest version:
+
+```bash
+flatpak update --user kiro.desktop.unofficial
 ```
 
 ---
@@ -104,14 +111,15 @@ cd kiro-desktop-flatpak
 
 ## Updates
 
-This package tracks Kiro's official metadata API:
+A GitHub Actions workflow checks Kiro's metadata API every 6 hours:
 
 ```
 https://prod.download.desktop.kiro.dev/stable/metadata-linux-x64-stable.json
 ```
 
-A GitHub Actions workflow (Phase 2) will automatically build and publish new
-releases whenever a new upstream version is detected.
+When a new version is detected, it automatically builds the Flatpak, deploys
+the repo to GitHub Pages, and creates a GitHub Release with the `.flatpak`
+bundle. You can also trigger a build manually from the Actions tab.
 
 ---
 
