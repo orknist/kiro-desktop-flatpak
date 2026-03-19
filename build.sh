@@ -84,7 +84,7 @@ success "SHA256: $KIRO_SHA256"
 # ---- Fill placeholders in a temporary copy of the manifest -----------------
 KIRO_DATE=$(date +%Y-%m-%d)
 GIT_SHORT_HASH=$(git -C "$(dirname -- "$0")" rev-parse --short HEAD 2>/dev/null || echo "nogit")
-KIRO_RELEASE="${KIRO_VERSION}.${GIT_SHORT_HASH}"
+KIRO_RELEASE="${KIRO_VERSION}+${GIT_SHORT_HASH}"
 info "Release : $KIRO_RELEASE (commit: $GIT_SHORT_HASH)"
 
 MANIFEST_TMP="${MANIFEST%.yml}.generated.yml"

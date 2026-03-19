@@ -46,7 +46,7 @@ jobs:
 
           # Tags now include git hash (e.g. v0.11.63.abc1234)
           # Extract base Kiro version from latest tag for comparison
-          LATEST_BASE=$(echo "$LATEST_TAG" | sed 's/^v//; s/\.[a-f0-9]\{7\}$//')
+          LATEST_BASE=$(echo "$LATEST_TAG" | sed 's/^v//; s/+[a-f0-9]\{7\}$//')
 
           if [ "$LATEST_BASE" = "$NEW_VERSION" ]; then
             echo "should_build=false" >> "$GITHUB_OUTPUT"
@@ -85,7 +85,7 @@ jobs:
         run: |
           git config --global --add safe.directory "$PWD"
           GIT_SHORT_HASH=$(git rev-parse --short HEAD)
-          KIRO_RELEASE="${{ needs.check.outputs.version }}.${GIT_SHORT_HASH}"
+          KIRO_RELEASE="${{ needs.check.outputs.version }}+${GIT_SHORT_HASH}"
           echo "KIRO_RELEASE=${KIRO_RELEASE}" >> "$GITHUB_ENV"
 
           sed \
@@ -171,7 +171,7 @@ jobs:
       - name: Resolve release version
         run: |
           GIT_SHORT_HASH=$(git rev-parse --short HEAD)
-          KIRO_RELEASE="${{ needs.check.outputs.version }}.${GIT_SHORT_HASH}"
+          KIRO_RELEASE="${{ needs.check.outputs.version }}+${GIT_SHORT_HASH}"
           echo "KIRO_RELEASE=${KIRO_RELEASE}" >> "$GITHUB_ENV"
 
       - name: Download bundle
