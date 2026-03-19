@@ -80,7 +80,8 @@ modules:
         path: kiro.desktop.unofficial.desktop
 
       - type: file
-        path: kiro.desktop.unofficial.metainfo.xml
+        path: kiro.desktop.unofficial.metainfo.generated.xml
+        dest-filename: kiro.desktop.unofficial.metainfo.xml
 
       - type: file
         path: kiro-wrapper.sh

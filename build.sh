@@ -98,6 +98,8 @@ KIRO_RELEASE="${KIRO_VERSION}+${GIT_SHORT_HASH}"
 info "Release : $KIRO_RELEASE (commit: $GIT_SHORT_HASH)"
 
 MANIFEST_TMP="${MANIFEST%.yml}.generated.yml"
+METAINFO_SRC="${APP_ID}.metainfo.xml"
+METAINFO_TMP="${APP_ID}.metainfo.generated.xml"
 
 sed \
   -e "s|KIRO_URL_PLACEHOLDER|${KIRO_URL}|g" \
@@ -105,6 +107,11 @@ sed \
   -e "s|KIRO_VERSION_PLACEHOLDER|${KIRO_RELEASE}|g" \
   -e "s|KIRO_DATE_PLACEHOLDER|${KIRO_DATE}|g" \
   "$MANIFEST" > "$MANIFEST_TMP"
+
+sed \
+  -e "s|KIRO_VERSION_PLACEHOLDER|${KIRO_RELEASE}|g" \
+  -e "s|KIRO_DATE_PLACEHOLDER|${KIRO_DATE}|g" \
+  "$METAINFO_SRC" > "$METAINFO_TMP"
 
 # ---- Build -----------------------------------------------------------------
 info "Building Flatpak (this may take a few minutes)..."
@@ -155,5 +162,5 @@ case "${1:-}" in
     ;;
 esac
 
-# Clean up the temporary manifest
-rm -f "$MANIFEST_TMP"
+# Clean up the temporary manifest and metainfo
+rm -f "$MANIFEST_TMP" "$METAINFO_TMP"
