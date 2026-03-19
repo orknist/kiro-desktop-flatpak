@@ -2,7 +2,7 @@
 Name=Kiro
 GenericName=IDE
 Comment=Agentic AI IDE — prototype to production (Unofficial Flatpak)
-Exec=kiro %U
+Exec=kiro-wrapper %U
 Icon=kiro.desktop.unofficial
 Type=Application
 StartupNotify=true

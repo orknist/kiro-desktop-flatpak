@@ -4,7 +4,7 @@ runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 base: org.electronjs.Electron2.BaseApp
 base-version: '25.08'
-command: kiro
+command: kiro-wrapper
 separate-locales: false
 
 finish-args:
@@ -41,7 +41,10 @@ modules:
       # Install application files
       - cp -r kiro-app /app/kiro
 
-      # Symlink the real binary into /app/bin so Flatpak can find the command
+      # Wrapper script that passes --no-sandbox --disable-gpu-sandbox
+      - install -Dm755 kiro-wrapper.sh /app/bin/kiro-wrapper
+
+      # Also keep a direct symlink for convenience
       - mkdir -p /app/bin
       - ln -sf /app/kiro/kiro /app/bin/kiro
 
@@ -76,3 +79,6 @@ modules:
 
       - type: file
         path: kiro.desktop.unofficial.metainfo.xml
+
+      - type: file
+        path: kiro-wrapper.sh
