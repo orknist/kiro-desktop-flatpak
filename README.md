@@ -57,7 +57,7 @@ flatpak run kiro.desktop.unofficial
 
 ### Updating
 
-The repo is automatically updated every 6 hours via GitHub Actions.
+The repo is automatically updated daily (midnight UTC) via GitHub Actions.
 To get the latest version:
 
 ```bash

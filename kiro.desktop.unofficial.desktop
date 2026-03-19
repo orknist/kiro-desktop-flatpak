@@ -14,4 +14,4 @@ Actions=new-window;
 
 [Desktop Action new-window]
 Name=New Window
-Exec=kiro --new-window %F
+Exec=kiro-wrapper --new-window %F

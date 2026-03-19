@@ -83,6 +83,7 @@ jobs:
 
       - name: Generate manifest
         run: |
+          git config --global --add safe.directory "$PWD"
           GIT_SHORT_HASH=$(git rev-parse --short HEAD)
           KIRO_RELEASE="${{ needs.check.outputs.version }}.${GIT_SHORT_HASH}"
           echo "KIRO_RELEASE=${KIRO_RELEASE}" >> "$GITHUB_ENV"
