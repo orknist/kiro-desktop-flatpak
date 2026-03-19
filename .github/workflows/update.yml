@@ -86,14 +86,20 @@ jobs:
           git config --global --add safe.directory "$PWD"
           GIT_SHORT_HASH=$(git rev-parse --short HEAD)
           KIRO_RELEASE="${{ needs.check.outputs.version }}+${GIT_SHORT_HASH}"
+          KIRO_DATE=$(date +%Y-%m-%d)
           echo "KIRO_RELEASE=${KIRO_RELEASE}" >> "$GITHUB_ENV"
 
           sed \
             -e "s|KIRO_URL_PLACEHOLDER|${{ needs.check.outputs.url }}|g" \
             -e "s|KIRO_SHA256_PLACEHOLDER|${{ steps.download.outputs.sha256 }}|g" \
             -e "s|KIRO_VERSION_PLACEHOLDER|${KIRO_RELEASE}|g" \
-            -e "s|KIRO_DATE_PLACEHOLDER|$(date +%Y-%m-%d)|g" \
+            -e "s|KIRO_DATE_PLACEHOLDER|${KIRO_DATE}|g" \
             kiro.desktop.unofficial.yml > kiro.desktop.unofficial.generated.yml
+
+          sed \
+            -e "s|KIRO_VERSION_PLACEHOLDER|${KIRO_RELEASE}|g" \
+            -e "s|KIRO_DATE_PLACEHOLDER|${KIRO_DATE}|g" \
+            kiro.desktop.unofficial.metainfo.xml > kiro.desktop.unofficial.metainfo.generated.xml
 
           cat kiro.desktop.unofficial.generated.yml
 

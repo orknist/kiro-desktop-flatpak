@@ -162,5 +162,5 @@ case "${1:-}" in
     ;;
 esac
 
-# Clean up the temporary manifest and metainfo
+# Clean up temporary files
 rm -f "$MANIFEST_TMP" "$METAINFO_TMP"

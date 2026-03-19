@@ -54,7 +54,7 @@ modules:
       - install -Dm644 kiro.desktop.unofficial.desktop
           /app/share/applications/kiro.desktop.unofficial.desktop
 
-      # AppStream metadata
+      # AppStream metadata — sed replaces placeholders at build time
       - install -Dm644 kiro.desktop.unofficial.metainfo.xml
           /app/share/metainfo/kiro.desktop.unofficial.metainfo.xml
 
