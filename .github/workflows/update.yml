@@ -93,7 +93,6 @@ jobs:
         with:
           manifest-path: kiro.desktop.unofficial.generated.yml
           bundle: kiro.desktop.unofficial.flatpak
-          repo-dir: repo
           cache-key: flatpak-builder-${{ needs.check.outputs.version }}
 
       - name: Fix repo for static hosting
