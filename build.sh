@@ -37,9 +37,9 @@ flatpak remote-add --if-not-exists --user flathub \
   https://dl.flathub.org/repo/flathub.flatpakrepo 2>/dev/null || true
 
 for dep in \
-  "org.freedesktop.Platform//24.08" \
-  "org.freedesktop.Sdk//24.08" \
-  "org.electronjs.Electron2.BaseApp//24.08"; do
+  "org.freedesktop.Platform//25.08" \
+  "org.freedesktop.Sdk//25.08" \
+  "org.electronjs.Electron2.BaseApp//25.08"; do
   if ! flatpak info --user "$dep" &>/dev/null; then
     info "Installing: $dep"
     flatpak install --user --noninteractive flathub "$dep"
@@ -83,12 +83,16 @@ success "SHA256: $KIRO_SHA256"
 
 # ---- Fill placeholders in a temporary copy of the manifest -----------------
 KIRO_DATE=$(date +%Y-%m-%d)
+GIT_SHORT_HASH=$(git -C "$(dirname -- "$0")" rev-parse --short HEAD 2>/dev/null || echo "nogit")
+KIRO_RELEASE="${KIRO_VERSION}.${GIT_SHORT_HASH}"
+info "Release : $KIRO_RELEASE (commit: $GIT_SHORT_HASH)"
+
 MANIFEST_TMP="${MANIFEST%.yml}.generated.yml"
 
 sed \
   -e "s|KIRO_URL_PLACEHOLDER|${KIRO_URL}|g" \
   -e "s|KIRO_SHA256_PLACEHOLDER|${KIRO_SHA256}|g" \
-  -e "s|KIRO_VERSION_PLACEHOLDER|${KIRO_VERSION}|g" \
+  -e "s|KIRO_VERSION_PLACEHOLDER|${KIRO_RELEASE}|g" \
   -e "s|KIRO_DATE_PLACEHOLDER|${KIRO_DATE}|g" \
   "$MANIFEST" > "$MANIFEST_TMP"
 
@@ -117,7 +121,7 @@ case "${1:-}" in
     success "Installed. Run with: flatpak run $APP_ID"
     ;;
   --bundle)
-    BUNDLE_FILE="${APP_ID}-${KIRO_VERSION}.flatpak"
+    BUNDLE_FILE="${APP_ID}-${KIRO_RELEASE:-${KIRO_VERSION}}.flatpak"
     info "Creating bundle: $BUNDLE_FILE"
     flatpak build-bundle "$REPO_DIR" "$BUNDLE_FILE" "$APP_ID"
     success "Bundle ready: $BUNDLE_FILE"
