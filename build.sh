@@ -10,7 +10,6 @@
 set -euo pipefail
 
 APP_ID="kiro.desktop.unofficial"
-METADATA_URL="https://prod.download.desktop.kiro.dev/stable/metadata-linux-x64-stable.json"
 BUILD_DIR=".flatpak-build"
 REPO_DIR=".flatpak-repo"
 MANIFEST="${APP_ID}.yml"
@@ -21,6 +20,16 @@ info()    { echo -e "${BLUE}[INFO]${NC} $*"; }
 success() { echo -e "${GREEN}[OK]${NC}   $*"; }
 warn()    { echo -e "${YELLOW}[WARN]${NC} $*"; }
 die()     { echo -e "${RED}[ERROR]${NC} $*" >&2; exit 1; }
+
+# ---- Architecture detection ------------------------------------------------
+HOST_ARCH=$(uname -m)
+case "$HOST_ARCH" in
+  x86_64)  KIRO_ARCH="x64" ;;
+  aarch64) KIRO_ARCH="arm64" ;;
+  *) die "Unsupported architecture: $HOST_ARCH" ;;
+esac
+
+METADATA_URL="https://prod.download.desktop.kiro.dev/stable/metadata-linux-${KIRO_ARCH}-stable.json"
 
 # ---- Dependency check -------------------------------------------------------
 for cmd in flatpak curl jq sha256sum sed; do
@@ -49,8 +58,9 @@ for dep in \
 done
 
 # ---- Fetch latest version from Kiro metadata API ---------------------------
-info "Querying Kiro metadata API..."
-METADATA=$(curl -fsSL "$METADATA_URL")
+info "Querying Kiro metadata API (arch: ${KIRO_ARCH})..."
+METADATA=$(curl -fsSL "$METADATA_URL" 2>/dev/null) \
+  || die "Could not fetch metadata for linux-${KIRO_ARCH}. Kiro may not yet provide a binary for this architecture."
 
 KIRO_URL=$(echo "$METADATA" \
   | jq -r '.releases[].updateTo.url' \
@@ -66,7 +76,7 @@ info "Version : $KIRO_VERSION"
 info "URL     : $KIRO_URL"
 
 # ---- Cache: skip download if the same version is already present -----------
-TARBALL_CACHE=".cache/kiro-${KIRO_VERSION}.tar.gz"
+TARBALL_CACHE=".cache/kiro-${KIRO_VERSION}-${KIRO_ARCH}.tar.gz"
 mkdir -p .cache
 
 if [ ! -f "$TARBALL_CACHE" ]; then

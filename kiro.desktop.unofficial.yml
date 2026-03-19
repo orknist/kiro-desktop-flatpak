@@ -19,6 +19,8 @@ finish-args:
   - --socket=pulseaudio
   # Full host filesystem access — expected for an IDE
   - --filesystem=host
+  # WSLg mounts (Wayland/X11 sockets live under /mnt/wslg in WSL)
+  - --filesystem=/mnt/wslg:ro
   # ptrace support for debugging
   - --allow=devel
   # Desktop notifications
