@@ -23,7 +23,7 @@ jobs:
       url: ${{ steps.meta.outputs.url }}
       should_build: ${{ steps.compare.outputs.should_build }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Fetch Kiro metadata
         id: meta
@@ -66,7 +66,7 @@ jobs:
       options: --privileged
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Download and compute SHA256
         id: download
@@ -110,7 +110,7 @@ jobs:
           ls -la repo/summary repo/config
 
       - name: Upload bundle artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: kiro-flatpak-${{ needs.check.outputs.version }}
           path: kiro.desktop.unofficial.flatpak
@@ -140,7 +140,7 @@ jobs:
           EOF
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: repo
 
@@ -166,7 +166,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Resolve release version
         run: |
@@ -175,7 +175,7 @@ jobs:
           echo "KIRO_RELEASE=${KIRO_RELEASE}" >> "$GITHUB_ENV"
 
       - name: Download bundle
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: kiro-flatpak-${{ needs.check.outputs.version }}
 
