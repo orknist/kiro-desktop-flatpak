@@ -35,7 +35,7 @@ marking it as the unofficial Flatpak distribution.
 
 ```bash
 # 1. Add this package's remote
-flatpak remote-add --if-not-exists --user kiro-unofficial \
+flatpak remote-add --if-not-exists --no-gpg-verify --user kiro-unofficial \
   https://orknist.github.io/kiro-desktop-flatpak
 
 # 2. Install
