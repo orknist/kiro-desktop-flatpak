@@ -131,7 +131,7 @@ jobs:
 
       - name: Export GPG public key to repo
         run: |
-          gpg --export --armor "${{ env.GPG_KEY_ID }}" > repo/kiro-unofficial.gpg
+          gpg --export "${{ env.GPG_KEY_ID }}" > repo/kiro-unofficial.gpg
 
       - name: Prepare Pages content
         run: |
