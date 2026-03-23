@@ -2,20 +2,20 @@
 <component type="desktop-application">
   <id>kiro.desktop.unofficial</id>
 
-  <name>Kiro</name>
-  <summary>Agentic AI IDE — prototype to production</summary>
+  <name>Kiro (Unofficial)</name>
+  <summary>Agentic AI IDE — unofficial community Flatpak</summary>
 
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>LicenseRef-proprietary</project_license>
 
-  <developer id="dev.kiro">
-    <name>Amazon Web Services</name>
+  <developer id="io.github.orknist">
+    <name>orknist (Community)</name>
   </developer>
 
   <description>
     <p>
-      <em>This is an unofficial, community-maintained Flatpak package.
-      Kiro is a proprietary application developed by Amazon Web Services.</em>
+      This is an unofficial, community-maintained Flatpak package.
+      Kiro is a proprietary application developed by Amazon Web Services.
     </p>
     <p>
       Kiro is an agentic AI IDE built on Code OSS (VS Code) that helps you go
@@ -32,8 +32,8 @@
   </description>
 
   <url type="homepage">https://kiro.dev</url>
-  <url type="bugtracker">https://github.com/kirodotdev/Kiro/issues</url>
-  <url type="vcs-browser">https://github.com/kirodotdev/Kiro</url>
+  <url type="bugtracker">https://github.com/orknist/kiro-desktop-flatpak/issues</url>
+  <url type="vcs-browser">https://github.com/orknist/kiro-desktop-flatpak</url>
 
   <launchable type="desktop-id">kiro.desktop.unofficial.desktop</launchable>
 

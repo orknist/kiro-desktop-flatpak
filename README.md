@@ -124,7 +124,7 @@ cd kiro-desktop-flatpak
 
 ## Updates
 
-A GitHub Actions workflow checks Kiro's metadata API every 6 hours:
+A GitHub Actions workflow checks Kiro's metadata API daily (midnight UTC):
 
 ```
 https://prod.download.desktop.kiro.dev/stable/metadata-linux-x64-stable.json

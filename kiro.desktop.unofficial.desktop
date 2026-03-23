@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Kiro
+Name=Kiro (Unofficial)
 GenericName=IDE
 Comment=Agentic AI IDE — prototype to production (Unofficial Flatpak)
 Exec=kiro-wrapper %U
