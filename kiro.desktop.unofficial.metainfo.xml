@@ -64,5 +64,13 @@
     </release>
   </releases>
 
+  <screenshots>
+    <screenshot type="default">
+      <caption>Kiro IDE — Spec-driven development with AI</caption>
+      <video container="mp4" codec="av1" width="2343" height="1458">https://kiro.dev/images/home/primary-specs.mp4</video>
+      <image type="source" width="1738" height="1160">https://kiro.dev/images/home/secondary-specs-tasks.png</image>
+    </screenshot>
+  </screenshots>
+
   <content_rating type="oars-1.1"/>
 </component>
