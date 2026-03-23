@@ -31,6 +31,16 @@ marking it as the unofficial Flatpak distribution.
 
 ## Installation
 
+### Prerequisites
+
+This package depends on runtimes hosted on Flathub. Make sure the Flathub
+remote is available on your system:
+
+```bash
+flatpak remote-add --if-not-exists --user flathub \
+  https://flathub.org/repo/flathub.flatpakrepo
+```
+
 ### Via Flatpak repo (recommended)
 
 ```bash

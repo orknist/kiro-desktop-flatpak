@@ -131,6 +131,10 @@ jobs:
           <body>
           <h1>Kiro IDE — Unofficial Flatpak Repository</h1>
           <pre>
+          # Ensure Flathub is available (required for runtime dependencies)
+          flatpak remote-add --if-not-exists --user flathub \
+            https://flathub.org/repo/flathub.flatpakrepo
+
           # Add repo
           flatpak remote-add --if-not-exists --no-gpg-verify --user kiro-unofficial \
             https://orknist.github.io/kiro-desktop-flatpak
@@ -192,6 +196,12 @@ jobs:
           name: Kiro ${{ env.KIRO_RELEASE }}
           body: |
             Automated Flatpak build for Kiro IDE v${{ needs.check.outputs.version }} (build: ${{ env.KIRO_RELEASE }})
+
+            **Prerequisites — ensure Flathub is available (needed for runtime dependencies):**
+            ```bash
+            flatpak remote-add --if-not-exists --user flathub \
+              https://flathub.org/repo/flathub.flatpakrepo
+            ```
 
             **Install via Flatpak repo (recommended):**
             ```bash
