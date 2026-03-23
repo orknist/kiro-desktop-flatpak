@@ -103,12 +103,19 @@ jobs:
 
           cat kiro.desktop.unofficial.generated.yml
 
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format long | grep sec | head -1 | awk '{print $2}' | cut -d'/' -f2)
+          echo "GPG_KEY_ID=${GPG_KEY_ID}" >> "$GITHUB_ENV"
+
       - name: Build Flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           manifest-path: kiro.desktop.unofficial.generated.yml
           bundle: kiro.desktop.unofficial.flatpak
           cache-key: flatpak-builder-${{ needs.check.outputs.version }}
+          gpg-sign: ${{ env.GPG_KEY_ID }}
 
       - name: Fix repo for static hosting
         run: |
@@ -121,6 +128,10 @@ jobs:
           name: kiro-flatpak-${{ needs.check.outputs.version }}
           path: kiro.desktop.unofficial.flatpak
           retention-days: 90
+
+      - name: Export GPG public key to repo
+        run: |
+          gpg --export --armor "${{ env.GPG_KEY_ID }}" > repo/kiro-unofficial.gpg
 
       - name: Prepare Pages content
         run: |
@@ -135,9 +146,11 @@ jobs:
           flatpak remote-add --if-not-exists --user flathub \
             https://flathub.org/repo/flathub.flatpakrepo
 
-          # Add repo
-          flatpak remote-add --if-not-exists --no-gpg-verify --user kiro-unofficial \
-            https://orknist.github.io/kiro-desktop-flatpak
+          # Download the GPG key and add the repo
+          curl -fsSL https://orknist.github.io/kiro-desktop-flatpak/kiro-unofficial.gpg \
+            | flatpak remote-add --if-not-exists --user \
+              --gpg-import=/dev/stdin kiro-unofficial \
+              https://orknist.github.io/kiro-desktop-flatpak
 
           # Install
           flatpak install --user kiro-unofficial kiro.desktop.unofficial
@@ -205,8 +218,10 @@ jobs:
 
             **Install via Flatpak repo (recommended):**
             ```bash
-            flatpak remote-add --if-not-exists --no-gpg-verify --user kiro-unofficial \
-              https://orknist.github.io/kiro-desktop-flatpak
+            curl -fsSL https://orknist.github.io/kiro-desktop-flatpak/kiro-unofficial.gpg \
+              | flatpak remote-add --if-not-exists --user \
+                --gpg-import=/dev/stdin kiro-unofficial \
+                https://orknist.github.io/kiro-desktop-flatpak
             flatpak install --user kiro-unofficial kiro.desktop.unofficial
             ```
 

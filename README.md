@@ -44,9 +44,11 @@ flatpak remote-add --if-not-exists --user flathub \
 ### Via Flatpak repo (recommended)
 
 ```bash
-# 1. Add this package's remote
-flatpak remote-add --if-not-exists --no-gpg-verify --user kiro-unofficial \
-  https://orknist.github.io/kiro-desktop-flatpak
+# 1. Add this package's remote (with GPG verification)
+curl -fsSL https://orknist.github.io/kiro-desktop-flatpak/kiro-unofficial.gpg \
+  | flatpak remote-add --if-not-exists --user \
+    --gpg-import=/dev/stdin kiro-unofficial \
+    https://orknist.github.io/kiro-desktop-flatpak
 
 # 2. Install
 flatpak install --user kiro-unofficial kiro.desktop.unofficial
