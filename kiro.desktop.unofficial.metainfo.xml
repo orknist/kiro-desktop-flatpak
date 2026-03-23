@@ -57,7 +57,7 @@
 
   <releases>
     <!-- build.sh updates this block on every build -->
-    <release version="KIRO_VERSION_PLACEHOLDER" date="KIRO_DATE_PLACEHOLDER">
+    <release version="KIRO_VERSION_PLACEHOLDER" date="KIRO_DATE_PLACEHOLDER" type="stable">
       <description>
         <p>Latest stable release of Kiro IDE.</p>
       </description>
