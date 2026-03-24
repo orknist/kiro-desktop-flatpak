@@ -59,4 +59,4 @@ detect_ozone_platform() {
 
 OZONE_PLATFORM="$(detect_ozone_platform)"
 
-exec /app/kiro/kiro --no-sandbox --disable-gpu-sandbox --ozone-platform="${OZONE_PLATFORM}" "$@"
+exec /app/kiro/kiro --no-sandbox --disable-gpu-sandbox --ozone-platform="${OZONE_PLATFORM}" --class=kiro.desktop.unofficial "$@"
