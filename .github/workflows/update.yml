@@ -117,7 +117,7 @@ jobs:
         with:
           manifest-path: kiro.desktop.unofficial.generated.yml
           bundle: kiro.desktop.unofficial.flatpak
-          upload-bundles: false
+          upload-artifact: false
           cache-key: flatpak-builder-${{ needs.check.outputs.version }}
           gpg-sign: ${{ env.GPG_KEY_ID }}
 
