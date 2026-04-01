@@ -139,6 +139,10 @@ jobs:
 
       - name: Prepare Pages content
         run: |
+          # Copy documentation to Pages
+          mkdir -p repo/docs
+          cp docs/*.md repo/docs/
+          
           cat > repo/index.html <<'EOF'
           <!DOCTYPE html>
           <html lang="en">
@@ -163,6 +167,12 @@ jobs:
           # Update
           flatpak update --user kiro.desktop.unofficial
           </pre>
+          <h2>Documentation</h2>
+          <ul>
+          <li><a href="docs/podman-setup.md">Podman Setup Guide</a></li>
+          <li><a href="docs/docker-setup.md">Docker Setup Guide</a></li>
+          </ul>
+          <p><a href="https://github.com/orknist/kiro-desktop-flatpak">View on GitHub</a></p>
           </body>
           </html>
           EOF
