@@ -1,4 +1,5 @@
 # Kiro IDE — Unofficial Flatpak
+![Visitors](https://api.visitorbadge.io/api/combined?path=orknist%2Fkiro-desktop-flatpak&countColor=%237138CC)
 
 [![Build Status](https://github.com/orknist/kiro-desktop-flatpak/actions/workflows/update.yml/badge.svg)](https://github.com/orknist/kiro-desktop-flatpak/actions)
 
