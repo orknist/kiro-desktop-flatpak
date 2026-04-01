@@ -109,6 +109,24 @@ cd kiro-desktop-flatpak
 
 ---
 
+## Container Runtime Setup (Docker/Podman)
+
+If you're using Docker or Podman extensions in Kiro, the Flatpak sandbox
+prevents direct access to the host's container runtime. This is especially
+relevant on immutable distros.
+
+See the setup guides:
+
+- **[Podman Setup Guide](docs/podman-setup.md)** — Recommended for immutable
+  distros (Fedora Silverblue, Bazzite, etc.)
+- **[Docker Setup Guide](docs/docker-setup.md)** — For systems with Docker
+  installed natively
+
+Both guides explain how to create wrapper scripts and configure Flatpak
+overrides so Kiro can communicate with your container runtime.
+
+---
+
 ## Sandbox Permissions
 
 | Permission | Reason |
