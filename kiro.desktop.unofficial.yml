@@ -58,9 +58,16 @@ modules:
       - install -Dm644 kiro.desktop.unofficial.metainfo.xml
           /app/share/metainfo/kiro.desktop.unofficial.metainfo.xml
 
-      # Icon
+      # Icon - install multiple sizes for better compatibility
       - install -Dm644 kiro.desktop.unofficial.png
           /app/share/icons/hicolor/512x512/apps/kiro.desktop.unofficial.png
+      - install -Dm644 kiro.desktop.unofficial.png
+          /app/share/icons/hicolor/256x256/apps/kiro.desktop.unofficial.png
+      - install -Dm644 kiro.desktop.unofficial.png
+          /app/share/icons/hicolor/128x128/apps/kiro.desktop.unofficial.png
+
+      # Update icon cache for proper icon display
+      - gtk-update-icon-cache -q -t -f /app/share/icons/hicolor || true
 
     sources:
       # -------------------------------------------------------------------
