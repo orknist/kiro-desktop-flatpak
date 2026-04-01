@@ -185,6 +185,7 @@ jobs:
   deploy-pages:
     name: Deploy to GitHub Pages
     needs: [check, build]
+    if: needs.check.outputs.should_build == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -200,6 +201,7 @@ jobs:
   release:
     name: Create GitHub Release
     needs: [check, build]
+    if: needs.check.outputs.should_build == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write
